@@ -31,6 +31,9 @@ public:
 	void raiseTo(int power);       // Raise into power
 	long long trace();             // Calculates and returns a trace of the matrix
 
+	bool operator != (const Matrix &B) const;
+	bool operator == (const Matrix &B) const;
+
 	friend ostream& operator << (ostream& out, Matrix& A);
 	friend istream& operator >> (istream& in, Matrix& A);
 

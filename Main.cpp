@@ -28,6 +28,28 @@ int main(int argc, char** argv) {
 	B.raiseTo(3);
 	cout << "Matrix B ^ 3:\n" << B;
 
+	if (A == A)
+		cout << "(A == A) is true\n";
+	else 
+		cout << "(A == A) is false\n";
+
+	if (A != A)
+		cout << "(A != A) is true\n";
+	else
+		cout << "(A != A) is false\n";
+
+	if (A == B)
+		cout << "(A == B) is true\n";
+	else
+		cout << "(A == B) is false\n";
+
+	if (A != B)
+		cout << "(A != B) is true\n";
+	else
+		cout << "(A != B) is false\n";
+
+	cout << endl;
+
 	//size_t H, W;
 
 	//std::cout << "Enter the size of matrix A (H, W): ";

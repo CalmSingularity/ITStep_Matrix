@@ -184,6 +184,17 @@ long long Matrix::trace() {
 	return result;
 }
 
+bool Matrix::operator == (const Matrix & B) const {
+	for (size_t i = 0; i < N; ++i) {
+		if (this->data[0][i] != B.data[0][i])
+			return false;
+	}
+	return true;
+}
+
+bool Matrix::operator != (const Matrix & B) const {
+	return !(*this == B);
+}
 
 
 // Input operator >>
