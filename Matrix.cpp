@@ -5,8 +5,8 @@ using namespace std;
 #include "Matrix.h"
 
 
-/* Constructor
-* If randomRange > 0, fills the matrix with random numbers from range [0, randomRange] */
+// Constructor
+// If randomRange > 0, fills the matrix with random numbers from range [0, randomRange]
 Matrix::Matrix(size_t h, size_t w, unsigned int randomRange) {
 	this->H = h;
 	this->W = w;
@@ -51,7 +51,6 @@ Matrix::Matrix(const Matrix &obj) {
 		this->data[0][i] = obj.data[0][i];
 	}
 }
-
 
 // Move constructor:
 Matrix::Matrix(Matrix &&obj) {
@@ -103,27 +102,27 @@ Matrix& Matrix::operator = (Matrix& A) {
 	return *this;  // Matrix* this;
 }
 
+// Matrix addition
 Matrix Matrix::operator + (Matrix& A) {
-	Matrix R(W, H);
-	for (size_t h = 0; h < H; ++h) {
-		for (size_t w = 0; w < W; ++w) {
-			R.data[h][w] = this->data[h][w] + A.data[h][w];
-		}
+	Matrix R(H, W);
+	for (size_t i = 0; i < N; ++i) {
+		R.data[0][i] = this->data[0][i] + A.data[0][i];
 	}
 	return R;
 }
 
+// Matrix substraction
 Matrix Matrix::operator - (Matrix& A) {
-	Matrix R(W, H);
-	for (size_t h = 0; h < H; ++h) {
-		for (size_t w = 0; w < W; ++w) {
-			R.data[h][w] = data[h][w] - A.data[h][w];
-		}
+	Matrix R(H, W);
+	for (size_t i = 0; i < N; ++i) {
+		R.data[0][i] = this->data[0][i] - A.data[0][i];
 	}
 	return R;
 }
 
-Matrix Matrix::operator * (Matrix& A) {
+// Matrix multiplication
+Matrix Matrix::operator * (Matrix& A) 
+{
 	Matrix R(H, H);
 	for (size_t h = 0; h < H; ++h) {
 		for (size_t w = 0; w < W; ++w) {
@@ -134,6 +133,55 @@ Matrix Matrix::operator * (Matrix& A) {
 		}
 	}
 	return R;
+}
+
+// Returns a single element
+int Matrix::operator ()(size_t h, size_t w) {
+	return data[h][w];
+}
+
+// Scalar multiplication
+// Modifies the matrix itself by multiplying it by scalar
+void Matrix::multiplyBy(int scalar) {
+	for (size_t i = 0; i < N; ++i) {
+		data[0][i] = data[0][i] * scalar;
+	}
+}
+
+// Modifies the matrix itself by raising it into power
+void Matrix::raiseTo(int power) {
+	if (power == -1) { // calculate an inverse matrix
+
+		return;
+	}
+
+	if (power == 0) { // calculate an identity matrix
+		for (size_t h = 0; h < H; ++h) {
+			for (size_t w = 0; w < W; ++w) {
+				if (h == w)
+					data[h][w] = 1;
+				else
+					data[h][w] = 0;
+			}
+		}
+		return;
+	}
+
+	if (power > 1) { // raise matrix into power
+		for (size_t i = 1; i < power; ++i) {
+			*this = *this * *this;
+		}
+	}
+
+}
+
+// Calculates and returns a trace of the matrix
+long long Matrix::trace() {
+	long long result = 0;
+	for (size_t i = 0; i < H; ++i) {
+		result += data[i][i];
+	}
+	return result;
 }
 
 

@@ -17,13 +17,19 @@ public:
 	Matrix(size_t h, size_t w, unsigned int randomRange = 0);
 
 	Matrix(const Matrix &obj);   // Copy constructor 
-	Matrix(Matrix &&obj);   // Move constructor
-	~Matrix();   // Destructor
+	Matrix(Matrix &&obj);        // Move constructor
+	~Matrix();                   // Destructor
 							 
 	Matrix& operator = (Matrix& A);   // Assignment operator =
-	Matrix operator + (Matrix& A);
-	Matrix operator - (Matrix& A);
-	Matrix operator * (Matrix& A);
+	Matrix operator + (Matrix& A);    // Matrix addition
+	Matrix operator - (Matrix& A);    // Matrix substraction
+	Matrix operator * (Matrix& A);    // Matrix multiplication
+	
+	int operator ()(size_t h, size_t w);  // Returns a single element
+
+	void multiplyBy(int scalar);   // Scalar multiplication
+	void raiseTo(int power);       // Raise into power
+	long long trace();             // Calculates and returns a trace of the matrix
 
 	friend ostream& operator << (ostream& out, Matrix& A);
 	friend istream& operator >> (istream& in, Matrix& A);
