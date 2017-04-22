@@ -26,10 +26,14 @@ public:
 	Matrix operator * (Matrix& A);    // Matrix multiplication
 	
 	int operator ()(size_t h, size_t w);  // Returns a single element
+	void setElement(size_t h, size_t w, int value);  // Assigns the value to the data[h][w]
 
-	void multiplyBy(int scalar);   // Scalar multiplication
-	void raiseTo(int power);       // Raise into power
-	long long trace();             // Calculates and returns a trace of the matrix
+	Matrix multiplyBy(int scalar);   // Returns matrix multiplied by a scalar
+	Matrix getRaisedTo(int power);   // Returns matrix raised into power
+	long long calculateTrace();    // Calculates and returns a trace of the matrix
+	double calculateDeterminant(); // Calculates and returns a determinant of the matrix
+	Matrix getMinor(size_t row, size_t col); // Returns a minor by excluding one row and one column from the original matrix
+	Matrix getTransposed();  // Returns a transposed matrix
 
 	bool operator != (const Matrix &B) const;
 	bool operator == (const Matrix &B) const;

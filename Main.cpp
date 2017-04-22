@@ -14,19 +14,22 @@ int main(int argc, char** argv) {
 
 	cout << "Matrix A * B:\n" << A * B;
 
-	cout << "Trace of matrix A = " << A.trace() << "\n\n";
+	cout << "Trace of matrix A = " << A.calculateTrace() << "\n\n";
 
 	cout << "Matrix B[1][1] = " << B(1, 1) << "\n\n";
 
 	int x = B(1, 1);
-	A.multiplyBy(x);
-	cout << "Matrix A * " << x << ":\n" << A;
+	cout << "Matrix A * " << x << ":\n" << A.multiplyBy(x);
 
-	A.raiseTo(0);
-	cout << "Matrix A ^ 0:\n" << A;
+	cout << "Matrix A ^ 0:\n" << A.getRaisedTo(0);
+	cout << "Matrix A ^ 1:\n" << A.getRaisedTo(1);
+	cout << "Matrix A ^ 2:\n" << A.getRaisedTo(2);
+	cout << "Matrix A ^ 3:\n" << A.getRaisedTo(3);
+	//cout << "Matrix A ^ -1:\n" << A.getRaisedTo(-1);
 
-	B.raiseTo(3);
-	cout << "Matrix B ^ 3:\n" << B;
+	//cout << "Minor (0, 0) of B:\n" << B.getMinor(0, 0);
+	//cout << "Minor (0, 2) of B:\n" << B.getMinor(0, 2);
+	//cout << "Minor (2, 1) of B:\n" << B.getMinor(2, 1);
 
 	if (A == A)
 		cout << "(A == A) is true\n";
@@ -49,6 +52,22 @@ int main(int argc, char** argv) {
 		cout << "(A != B) is false\n";
 
 	cout << endl;
+
+	Matrix X(2, 2, 10);
+	cout << "Matrix X:\n" << X;
+	cout << "Determinant of X = " << X.calculateDeterminant() << endl << endl;
+
+	Matrix Y(3, 3, 10);
+	cout << "Matrix Y:\n" << Y;
+	cout << "Determinant of Y = " << Y.calculateDeterminant() << endl << endl;
+
+	Matrix Z(4, 4, 10);
+	cout << "Matrix Z:\n" << Z;
+	cout << "Determinant of Z = " << Z.calculateDeterminant() << endl << endl;
+
+	cout << "Transposed Z: " << endl << Z.getTransposed() << endl << endl;
+
+
 
 	//size_t H, W;
 

@@ -140,48 +140,119 @@ int Matrix::operator ()(size_t h, size_t w) {
 	return data[h][w];
 }
 
-// Scalar multiplication
-// Modifies the matrix itself by multiplying it by scalar
-void Matrix::multiplyBy(int scalar) {
-	for (size_t i = 0; i < N; ++i) {
-		data[0][i] = data[0][i] * scalar;
-	}
+void Matrix::setElement(size_t h, size_t w, int value) {
+	data[h][w] = value;
 }
 
-// Modifies the matrix itself by raising it into power
-void Matrix::raiseTo(int power) {
-	if (power == -1) { // calculate an inverse matrix
+// Returns matrix multiplied by a scalar
+Matrix Matrix::multiplyBy(int scalar) {
+	Matrix result(H, W);
+	for (size_t i = 0; i < N; ++i) {
+		result.setElement(0, i, data[0][i] * scalar);
+	}
+	return result;
+}
 
-		return;
+// Returns matrix raised into power
+Matrix Matrix::getRaisedTo(int power) {
+	Matrix result(H, W);
+	
+	if (power == -1) { // calculate an inverse matrix
+		// if (calculateDeterminant() == 0) return;
+		
+		return result;
 	}
 
 	if (power == 0) { // calculate an identity matrix
 		for (size_t h = 0; h < H; ++h) {
 			for (size_t w = 0; w < W; ++w) {
 				if (h == w)
-					data[h][w] = 1;
+					result.setElement(h, w, 1);
 				else
-					data[h][w] = 0;
+					result.setElement(h, w, 0);
 			}
 		}
-		return;
+		return result;
 	}
 
-	if (power > 1) { // raise matrix into power
-		for (size_t i = 1; i < power; ++i) {
-			*this = *this * *this;
-		}
+	if (power == 1) {
+		return *this;
+	}
+
+	if (power == 2) {
+		return *this * *this;
+	}
+
+	if (power >= 3) { // raise matrix into power
+		result = this->getRaisedTo(power / 2);
+		result = result * result;
+		if (power % 2 == 1)
+			result = result * *this;
+		return result;
 	}
 
 }
 
 // Calculates and returns a trace of the matrix
-long long Matrix::trace() {
+long long Matrix::calculateTrace() {
 	long long result = 0;
 	for (size_t i = 0; i < H; ++i) {
 		result += data[i][i];
 	}
 	return result;
+}
+
+// Calculates and returns a determinant of the matrix
+double Matrix::calculateDeterminant() {
+	if (H != W)
+		return -1;
+
+	if (H == 1)
+		return data[0][0];
+
+	if (H == 2)
+		return data[0][0] * data[1][1] - data[1][0] * data[0][1];
+
+	if (H >= 3) {
+		double determinant = 0;
+		for (size_t k = 0; k < H; ++k) {
+			if (k % 2 == 0) 
+				determinant += data[0][k] * getMinor(0, k).calculateDeterminant();
+			else
+				determinant -= data[0][k] * getMinor(0, k).calculateDeterminant();
+		}
+
+		return determinant;
+	}
+}
+
+// Returns a minor by excluding one row and one column from the original matrix
+Matrix Matrix::getMinor(size_t row, size_t col) {
+	Matrix result(H - 1, H - 1);
+	size_t res_i, res_j;   // to count the number of row and column of the resulting matrix
+	res_i = 0;
+	for (size_t i = 0; i < H; ++i) {
+		if (i == row) continue;
+		res_j = 0;
+		for (size_t j = 0; j < W; ++j) {
+			if (j == col) continue;
+			result.setElement(res_i, res_j, data[i][j]);
+			++res_j;
+		}
+		++res_i;
+	}
+	return result;
+}
+
+// Returns a transposed matrix
+Matrix Matrix::getTransposed() {
+	Matrix transposed(W, H);
+	for (size_t h = 0; h < H; ++h) {
+		for (size_t w = 0; w < W; ++w) {
+			transposed.setElement(w, h, data[h][w]);
+		}
+	}
+	return transposed;
 }
 
 bool Matrix::operator == (const Matrix & B) const {
