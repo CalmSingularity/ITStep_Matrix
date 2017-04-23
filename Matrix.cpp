@@ -14,8 +14,8 @@ Matrix::Matrix(size_t h, size_t w, unsigned int randomRange) {
 	// cout << "Constructor called with H = " << H << " and W = " << W << "\n";
 
 	// allocate memory:
-	data = new int*[H + 1];
-	data[0] = new int[W * H];
+	data = new double*[H + 1];
+	data[0] = new double[W * H];
 	for (size_t i = 1; i < H; ++i) {
 		data[i] = data[i - 1] + W;
 	}
@@ -39,8 +39,8 @@ Matrix::Matrix(const Matrix &obj) {
 	this->N = obj.N;
 
 	// allocate memory:
-	data = new int*[H + 1];
-	data[0] = new int[W * H];
+	data = new double*[H + 1];
+	data[0] = new double[W * H];
 	for (size_t i = 1; i < H; ++i) {
 		data[i] = data[i - 1] + W;
 	}
@@ -87,8 +87,8 @@ Matrix& Matrix::operator = (Matrix& A) {
 	// cout << "Assignment operator called with H = " << H << " and W = " << W << "\n";
 
 	// allocate memory:
-	data = new int*[H + 1];
-	data[0] = new int[W * H];
+	data = new double*[H + 1];
+	data[0] = new double[W * H];
 	for (size_t i = 1; i < H; ++i) {
 		data[i] = data[i - 1] + W;
 	}
@@ -136,16 +136,16 @@ Matrix Matrix::operator * (Matrix& A)
 }
 
 // Returns a single element
-int Matrix::operator ()(size_t h, size_t w) {
+double Matrix::operator ()(size_t h, size_t w) {
 	return data[h][w];
 }
 
-void Matrix::setElement(size_t h, size_t w, int value) {
+void Matrix::setElement(size_t h, size_t w, double value) {
 	data[h][w] = value;
 }
 
 // Returns matrix multiplied by a scalar
-Matrix Matrix::getMultipliedBy(int scalar) {
+Matrix Matrix::getMultipliedBy(double scalar) {
 	Matrix result(H, W);
 	for (size_t i = 0; i < N; ++i) {
 		result.setElement(0, i, data[0][i] * scalar);
@@ -158,7 +158,7 @@ Matrix Matrix::getRaisedTo(int power) {
 	Matrix result(H, W);
 	
 	if (power == -1) { // calculate an inverse matrix
-		int determinant = calculateDeterminant();
+		double determinant = calculateDeterminant();
 		// if (determinant == 0) return;
 		
 		for (size_t h = 0; h < H; ++h) {
@@ -203,8 +203,8 @@ Matrix Matrix::getRaisedTo(int power) {
 }
 
 // Calculates and returns a trace of the matrix
-long long Matrix::calculateTrace() {
-	long long result = 0;
+double Matrix::calculateTrace() {
+	double result = 0;
 	for (size_t i = 0; i < H; ++i) {
 		result += data[i][i];
 	}
@@ -287,7 +287,12 @@ istream& operator >> (istream& in, Matrix& A) {
 ostream& operator << (ostream& out, Matrix& A) {
 	for (size_t h = 0; h < A.H; ++h) {
 		for (size_t w = 0; w < A.W; ++w) {
-			out << A.data[h][w] << " ";
+			if (A.data[h][w] > 0.0001) {
+				out << A.data[h][w];
+			} else {
+				out << 0;
+			}
+			out << " ";
 		}
 		out << "\n";
 	}

@@ -22,14 +22,11 @@ int main(int argc, char** argv) {
 	int x = B(1, 1);
 	cout << "Matrix A * " << x << ":\n" << A.getMultipliedBy(x);
 
-	Matrix I = A.getRaisedTo(-1);
-	cout << "Matrix A ^ -1:\n" << I;
-	cout << "Matrix (A ^ 1) * (A ^ -1):\n" << A * I;
-
 	cout << "Matrix A ^ 0:\n" << A.getRaisedTo(0);
 	cout << "Matrix A ^ 1:\n" << A.getRaisedTo(1);
 	cout << "Matrix A ^ 2:\n" << A.getRaisedTo(2);
 	cout << "Matrix A ^ 3:\n" << A.getRaisedTo(3);
+	cout << "Matrix A ^ 4:\n" << A.getRaisedTo(4);
 
 	//cout << "Minor (0, 0) of B:\n" << B.getMinor(0, 0);
 	//cout << "Minor (0, 2) of B:\n" << B.getMinor(0, 2);
@@ -69,11 +66,13 @@ int main(int argc, char** argv) {
 	cout << "Matrix Z:\n" << Z;
 	cout << "Determinant of Z = " << Z.calculateDeterminant() << endl << endl;
 
-	cout << "Transposed Z: " << endl << Z.getTransposed() << endl << endl;
+	cout << "Transposed Z: " << endl << Z.getTransposed() << endl;
 
-	Matrix D(3, 3, 10);
+	Matrix D(4, 4, 10);
 	cout << "Matrix D:\n" << D;
-	cout << "Matrix D ^ -1:\n" << D.getRaisedTo(-1);
+	Matrix I = D.getRaisedTo(-1);
+	cout << "Matrix D ^ -1:\n" << I;
+	cout << "Matrix (D ^ 1) * (D ^ -1):\n" << D * I;
 
 	//size_t H, W;
 
