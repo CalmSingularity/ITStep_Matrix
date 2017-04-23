@@ -7,15 +7,16 @@ using namespace std;
 
 // Constructor
 // If randomRange > 0, fills the matrix with random numbers from range [0, randomRange]
-Matrix::Matrix(size_t h, size_t w, unsigned int randomRange) {
+template <class T>
+Matrix<T>::Matrix(size_t h, size_t w, T randomRange) {
 	this->H = h;
 	this->W = w;
 	this->N = H * W;
 	// cout << "Constructor called with H = " << H << " and W = " << W << "\n";
 
 	// allocate memory:
-	data = new int*[H + 1];
-	data[0] = new int[W * H];
+	data = new T*[H + 1];
+	data[0] = new T[W * H];
 	for (size_t i = 1; i < H; ++i) {
 		data[i] = data[i - 1] + W;
 	}
@@ -32,15 +33,16 @@ Matrix::Matrix(size_t h, size_t w, unsigned int randomRange) {
 }
 
 // Copy constructor:
-Matrix::Matrix(const Matrix &obj) {
+template <class T>
+Matrix<T>::Matrix(const Matrix &obj) {
 	// cout << "Copy constructor called with H = " << H << " and W = " << W << "\n";
 	this->W = obj.W;
 	this->H = obj.H;
 	this->N = obj.N;
 
 	// allocate memory:
-	data = new int*[H + 1];
-	data[0] = new int[W * H];
+	data = new T*[H + 1];
+	data[0] = new T[W * H];
 	for (size_t i = 1; i < H; ++i) {
 		data[i] = data[i - 1] + W;
 	}
@@ -53,7 +55,8 @@ Matrix::Matrix(const Matrix &obj) {
 }
 
 // Move constructor:
-Matrix::Matrix(Matrix &&obj) {
+template <class T>
+Matrix<T>::Matrix(Matrix &&obj) {
 	// cout << "Move constructor called with H = " << H << " and W = " << W << "\n";
 		
 	// copy pointers
@@ -70,7 +73,8 @@ Matrix::Matrix(Matrix &&obj) {
 }
 
 // Destructor:
-Matrix::~Matrix() {
+template <class T>
+Matrix<T>::~Matrix() {
 	// cout << "Destructor called (H = " << H << " and W = " << W << ")\n";
 	if (data) {
 		delete[] data[0];
@@ -80,15 +84,16 @@ Matrix::~Matrix() {
 }
 
 // Assignment operator =:
-Matrix& Matrix::operator = (Matrix& A) {
+template <class T>
+Matrix<T>& Matrix<T>::operator = (Matrix<T>& A) {
 	this->W = A.W;
 	this->H = A.W;
 	this->N = A.N;
 	// cout << "Assignment operator called with H = " << H << " and W = " << W << "\n";
 
 	// allocate memory:
-	data = new int*[H + 1];
-	data[0] = new int[W * H];
+	data = new T*[H + 1];
+	data[0] = new T[W * H];
 	for (size_t i = 1; i < H; ++i) {
 		data[i] = data[i - 1] + W;
 	}
@@ -103,7 +108,8 @@ Matrix& Matrix::operator = (Matrix& A) {
 }
 
 // Matrix addition
-Matrix Matrix::operator + (Matrix& A) {
+template <class T>
+Matrix<T> Matrix<T>::operator + (Matrix<T>& A) {
 	Matrix R(H, W);
 	for (size_t i = 0; i < N; ++i) {
 		R.data[0][i] = this->data[0][i] + A.data[0][i];
@@ -112,7 +118,8 @@ Matrix Matrix::operator + (Matrix& A) {
 }
 
 // Matrix substraction
-Matrix Matrix::operator - (Matrix& A) {
+template <class T>
+Matrix<T> Matrix<T>::operator - (Matrix<T>& A) {
 	Matrix R(H, W);
 	for (size_t i = 0; i < N; ++i) {
 		R.data[0][i] = this->data[0][i] - A.data[0][i];
@@ -121,7 +128,8 @@ Matrix Matrix::operator - (Matrix& A) {
 }
 
 // Matrix multiplication
-Matrix Matrix::operator * (Matrix& A) 
+template <class T>
+Matrix<T> Matrix<T>::operator * (Matrix<T>& A) 
 {
 	Matrix R(H, H);
 	for (size_t h = 0; h < H; ++h) {
@@ -136,17 +144,20 @@ Matrix Matrix::operator * (Matrix& A)
 }
 
 // Returns a single element
-int Matrix::operator ()(size_t h, size_t w) {
+template <class T>
+T Matrix<T>::operator ()(size_t h, size_t w) {
 	return data[h][w];
 }
 
-void Matrix::setElement(size_t h, size_t w, int value) {
+template <class T>
+void Matrix<T>::setElement(size_t h, size_t w, T value) {
 	data[h][w] = value;
 }
 
 // Returns matrix multiplied by a scalar
-Matrix Matrix::multiplyBy(int scalar) {
-	Matrix result(H, W);
+template <class T>
+Matrix<T> Matrix<T>::getMultipliedBy(T scalar) {
+	Matrix<T> result(H, W);
 	for (size_t i = 0; i < N; ++i) {
 		result.setElement(0, i, data[0][i] * scalar);
 	}
@@ -154,12 +165,24 @@ Matrix Matrix::multiplyBy(int scalar) {
 }
 
 // Returns matrix raised into power
-Matrix Matrix::getRaisedTo(int power) {
+template <class T>
+Matrix<T> Matrix<T>::getRaisedTo(T power) {
 	Matrix result(H, W);
 	
 	if (power == -1) { // calculate an inverse matrix
-		// if (calculateDeterminant() == 0) return;
+		int determinant = calculateDeterminant();
+		// if (determinant == 0) return;
 		
+		for (size_t h = 0; h < H; ++h) {
+			for (size_t w = 0; w < W; ++w) {
+				result.setElement(h, w, this->getMinor(h, w).calculateDeterminant() * (((h + w) % 2 == 0) ? 1 : -1));
+
+			}
+		}
+
+		result = result.getTransposed();
+		result = result.getMultipliedBy(1 / determinant);
+
 		return result;
 	}
 
@@ -194,8 +217,9 @@ Matrix Matrix::getRaisedTo(int power) {
 }
 
 // Calculates and returns a trace of the matrix
-long long Matrix::calculateTrace() {
-	long long result = 0;
+template <class T>
+T Matrix<T>::calculateTrace() {
+	T result = 0;
 	for (size_t i = 0; i < H; ++i) {
 		result += data[i][i];
 	}
@@ -203,31 +227,29 @@ long long Matrix::calculateTrace() {
 }
 
 // Calculates and returns a determinant of the matrix
-double Matrix::calculateDeterminant() {
-	if (H != W)
+template <class T>
+T Matrix<T>::calculateDeterminant() {
+	if (H != W) {
 		return -1;
-
-	if (H == 1)
+	}
+	if (H == 1) {
 		return data[0][0];
-
-	if (H == 2)
+	}
+	if (H == 2) {
 		return data[0][0] * data[1][1] - data[1][0] * data[0][1];
-
+	}
 	if (H >= 3) {
-		double determinant = 0;
+		T determinant = 0;
 		for (size_t k = 0; k < H; ++k) {
-			if (k % 2 == 0) 
-				determinant += data[0][k] * getMinor(0, k).calculateDeterminant();
-			else
-				determinant -= data[0][k] * getMinor(0, k).calculateDeterminant();
+			determinant += data[0][k] * getMinor(0, k).calculateDeterminant() * ((k % 2 == 0) ? 1 : -1);
 		}
-
 		return determinant;
 	}
 }
 
 // Returns a minor by excluding one row and one column from the original matrix
-Matrix Matrix::getMinor(size_t row, size_t col) {
+template <class T>
+Matrix<T> Matrix<T>::getMinor(size_t row, size_t col) {
 	Matrix result(H - 1, H - 1);
 	size_t res_i, res_j;   // to count the number of row and column of the resulting matrix
 	res_i = 0;
@@ -245,7 +267,8 @@ Matrix Matrix::getMinor(size_t row, size_t col) {
 }
 
 // Returns a transposed matrix
-Matrix Matrix::getTransposed() {
+template <class T>
+Matrix<T> Matrix<T>::getTransposed() {
 	Matrix transposed(W, H);
 	for (size_t h = 0; h < H; ++h) {
 		for (size_t w = 0; w < W; ++w) {
@@ -255,7 +278,8 @@ Matrix Matrix::getTransposed() {
 	return transposed;
 }
 
-bool Matrix::operator == (const Matrix & B) const {
+template <class T>
+bool Matrix<T>::operator == (const Matrix & B) const {
 	for (size_t i = 0; i < N; ++i) {
 		if (this->data[0][i] != B.data[0][i])
 			return false;
@@ -263,13 +287,15 @@ bool Matrix::operator == (const Matrix & B) const {
 	return true;
 }
 
-bool Matrix::operator != (const Matrix & B) const {
+template <class T>
+bool Matrix<T>::operator != (const Matrix & B) const {
 	return !(*this == B);
 }
 
 
 // Input operator >>
-istream& operator >> (istream& in, Matrix& A) {
+template <typename T>
+istream& operator >> (istream& in, Matrix<T>& A) {
 	for (size_t h = 0; h < A.H; ++h) {
 		for (size_t w = 0; w < A.W; ++w) {
 			cin >> A.data[h][w];
@@ -279,7 +305,8 @@ istream& operator >> (istream& in, Matrix& A) {
 }
 
 // Output operator <<
-ostream& operator << (ostream& out, Matrix& A) {
+template <typename T>
+ostream& operator << (ostream& out, Matrix<T>& A) {
 	for (size_t h = 0; h < A.H; ++h) {
 		for (size_t w = 0; w < A.W; ++w) {
 			out << A.data[h][w] << " ";

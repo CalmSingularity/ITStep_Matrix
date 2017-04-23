@@ -2,14 +2,14 @@
 
 int main(int argc, char** argv) {
 
-	Matrix A(4, 4, 10);
+	Matrix<int> A(4, 4, 10);
 	cout << "Matrix A:\n" << A;
-	Matrix B(4, 4, 10);
+	Matrix<int> B(4, 4, 10);
 	cout << "Matrix B:\n" << B;
 
 	cout << "Matrix A + B:\n" << A + B;
 
-	Matrix C = A - B;
+	Matrix<int> C = A - B;
 	cout << "Matrix A - B:\n" << C;
 
 	cout << "Matrix A * B:\n" << A * B;
@@ -19,13 +19,18 @@ int main(int argc, char** argv) {
 	cout << "Matrix B[1][1] = " << B(1, 1) << "\n\n";
 
 	int x = B(1, 1);
-	cout << "Matrix A * " << x << ":\n" << A.multiplyBy(x);
+	cout << "Matrix A * " << x << ":\n" << A.getMultipliedBy(x);
+
+	Matrix<int> I = A.getRaisedTo(-1);
+	cout << "Matrix A ^ -1:\n" << I;
+
+	cout << "Matrix (A ^ 1) * (A ^ -1):\n" << A * I;
 
 	cout << "Matrix A ^ 0:\n" << A.getRaisedTo(0);
 	cout << "Matrix A ^ 1:\n" << A.getRaisedTo(1);
 	cout << "Matrix A ^ 2:\n" << A.getRaisedTo(2);
 	cout << "Matrix A ^ 3:\n" << A.getRaisedTo(3);
-	//cout << "Matrix A ^ -1:\n" << A.getRaisedTo(-1);
+	
 
 	//cout << "Minor (0, 0) of B:\n" << B.getMinor(0, 0);
 	//cout << "Minor (0, 2) of B:\n" << B.getMinor(0, 2);
@@ -53,21 +58,24 @@ int main(int argc, char** argv) {
 
 	cout << endl;
 
-	Matrix X(2, 2, 10);
+	Matrix<int> X(2, 2, 10);
 	cout << "Matrix X:\n" << X;
 	cout << "Determinant of X = " << X.calculateDeterminant() << endl << endl;
 
-	Matrix Y(3, 3, 10);
+	Matrix<int> Y(3, 3, 10);
 	cout << "Matrix Y:\n" << Y;
 	cout << "Determinant of Y = " << Y.calculateDeterminant() << endl << endl;
 
-	Matrix Z(4, 4, 10);
+	Matrix<int> Z(4, 4, 10);
 	cout << "Matrix Z:\n" << Z;
 	cout << "Determinant of Z = " << Z.calculateDeterminant() << endl << endl;
 
 	cout << "Transposed Z: " << endl << Z.getTransposed() << endl << endl;
 
-
+	Matrix<int> D(3, 3, 10);
+	cout << "Matrix D:\n" << D;
+	cout << "Matrix D ^ -1:\n" << D.getRaisedTo(-1);
+	
 
 	//size_t H, W;
 
