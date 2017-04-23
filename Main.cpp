@@ -1,4 +1,5 @@
 #include "Matrix.h"
+using namespace std;
 
 int main(int argc, char** argv) {
 
@@ -19,13 +20,16 @@ int main(int argc, char** argv) {
 	cout << "Matrix B[1][1] = " << B(1, 1) << "\n\n";
 
 	int x = B(1, 1);
-	cout << "Matrix A * " << x << ":\n" << A.multiplyBy(x);
+	cout << "Matrix A * " << x << ":\n" << A.getMultipliedBy(x);
+
+	Matrix I = A.getRaisedTo(-1);
+	cout << "Matrix A ^ -1:\n" << I;
+	cout << "Matrix (A ^ 1) * (A ^ -1):\n" << A * I;
 
 	cout << "Matrix A ^ 0:\n" << A.getRaisedTo(0);
 	cout << "Matrix A ^ 1:\n" << A.getRaisedTo(1);
 	cout << "Matrix A ^ 2:\n" << A.getRaisedTo(2);
 	cout << "Matrix A ^ 3:\n" << A.getRaisedTo(3);
-	//cout << "Matrix A ^ -1:\n" << A.getRaisedTo(-1);
 
 	//cout << "Minor (0, 0) of B:\n" << B.getMinor(0, 0);
 	//cout << "Minor (0, 2) of B:\n" << B.getMinor(0, 2);
@@ -67,7 +71,9 @@ int main(int argc, char** argv) {
 
 	cout << "Transposed Z: " << endl << Z.getTransposed() << endl << endl;
 
-
+	Matrix D(3, 3, 10);
+	cout << "Matrix D:\n" << D;
+	cout << "Matrix D ^ -1:\n" << D.getRaisedTo(-1);
 
 	//size_t H, W;
 

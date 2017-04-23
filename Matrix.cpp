@@ -1,8 +1,8 @@
 #define _CRT_RAND_S
 #include <stdlib.h>  // rand_s
 #include <iostream>
-using namespace std;
 #include "Matrix.h"
+using namespace std;
 
 
 // Constructor
@@ -145,7 +145,7 @@ void Matrix::setElement(size_t h, size_t w, int value) {
 }
 
 // Returns matrix multiplied by a scalar
-Matrix Matrix::multiplyBy(int scalar) {
+Matrix Matrix::getMultipliedBy(int scalar) {
 	Matrix result(H, W);
 	for (size_t i = 0; i < N; ++i) {
 		result.setElement(0, i, data[0][i] * scalar);
@@ -158,8 +158,17 @@ Matrix Matrix::getRaisedTo(int power) {
 	Matrix result(H, W);
 	
 	if (power == -1) { // calculate an inverse matrix
-		// if (calculateDeterminant() == 0) return;
+		int determinant = calculateDeterminant();
+		// if (determinant == 0) return;
 		
+		for (size_t h = 0; h < H; ++h) {
+			for (size_t w = 0; w < W; ++w) {
+				result.setElement(h, w, this->getMinor(h, w).calculateDeterminant() * (((h + w) % 2 == 0) ? 1 : -1));
+			}
+		}
+		result = result.getTransposed();
+		result = result.getMultipliedBy(1 / determinant);
+
 		return result;
 	}
 
@@ -216,12 +225,8 @@ double Matrix::calculateDeterminant() {
 	if (H >= 3) {
 		double determinant = 0;
 		for (size_t k = 0; k < H; ++k) {
-			if (k % 2 == 0) 
-				determinant += data[0][k] * getMinor(0, k).calculateDeterminant();
-			else
-				determinant -= data[0][k] * getMinor(0, k).calculateDeterminant();
+			determinant += data[0][k] * getMinor(0, k).calculateDeterminant() * ((k % 2 == 0) ? 1 : -1);
 		}
-
 		return determinant;
 	}
 }

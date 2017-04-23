@@ -2,7 +2,6 @@
 #define _CRT_RAND_S
 #include <stdlib.h>  // rand_s
 #include <iostream>
-using namespace std;
 
 
 class Matrix {
@@ -28,7 +27,7 @@ public:
 	int operator ()(size_t h, size_t w);  // Returns a single element
 	void setElement(size_t h, size_t w, int value);  // Assigns the value to the data[h][w]
 
-	Matrix multiplyBy(int scalar);   // Returns matrix multiplied by a scalar
+	Matrix getMultipliedBy(int scalar);   // Returns matrix multiplied by a scalar
 	Matrix getRaisedTo(int power);   // Returns matrix raised into power
 	long long calculateTrace();    // Calculates and returns a trace of the matrix
 	double calculateDeterminant(); // Calculates and returns a determinant of the matrix
@@ -38,10 +37,10 @@ public:
 	bool operator != (const Matrix &B) const;
 	bool operator == (const Matrix &B) const;
 
-	friend ostream& operator << (ostream& out, Matrix& A);
-	friend istream& operator >> (istream& in, Matrix& A);
+	friend std::ostream& operator << (std::ostream& out, Matrix& A);
+	friend std::istream& operator >> (std::istream& in, Matrix& A);
 
 };
 
-istream& operator >> (istream& in, Matrix& A);
-ostream& operator << (ostream& out, Matrix& A);
+std::ostream& operator << (std::ostream& out, Matrix& A);
+std::istream& operator >> (std::istream& in, Matrix& A);
